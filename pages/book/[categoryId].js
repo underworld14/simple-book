@@ -1,11 +1,11 @@
 import Head from "next/head";
-import Link from "next/link";
 import Image from "next/image";
-import styles from "../styles/Home.module.css";
+import styles from "../../styles/Home.module.css";
 
-export async function getServerSideProps() {
+export async function getServerSideProps(ctx) {
+  const categoryId = ctx.params.categoryId;
   const res = await fetch(
-    `https://asia-southeast2-sejutacita-app.cloudfunctions.net/fee-assessment-categories`
+    `https://asia-southeast2-sejutacita-app.cloudfunctions.net/fee-assessment-books?categoryId=${categoryId}`
   );
   const data = await res.json();
 
@@ -13,7 +13,7 @@ export async function getServerSideProps() {
   return { props: { data: data } };
 }
 
-export default function Home(props) {
+export default function Book(props) {
   return (
     <div className={styles.container}>
       <Head>
@@ -23,10 +23,11 @@ export default function Home(props) {
       </Head>
 
       <main className={styles.main}>
-        <ul>
-          {props.data?.map((category, i) => (
-            <li key={i}>
-              <Link href={`/book/${category.id}`}>{category.name}</Link>
+        <ul style={{ listStyleType: "none" }}>
+          {props.data.map((book, i) => (
+            <li key={i} style={{ padding: "20px", marginTop: "15px", border: "1px solid #000" }}>
+              <h2>{book.title}</h2>
+              <p> {book.description} </p>
             </li>
           ))}
         </ul>
